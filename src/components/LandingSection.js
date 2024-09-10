@@ -16,15 +16,11 @@ const LandingSection = () => (
     backgroundColor="#2A4365"
   >
     <VStack>
-      <Avatar img src="https://i.pravatar.cc/150?img=7" alt="avatar"></Avatar>
+      <Avatar src="https://i.pravatar.cc/150?img=7" alt="avatar"></Avatar>
       <h5>{greeting}</h5>
       <br></br>
-      <Heading>
-        <h1>{bio1}</h1>
-      </Heading>
-      <Heading>
-        <h1>{bio2}</h1>
-      </Heading>
+      <Heading>{bio1}</Heading>
+      <Heading>{bio2}</Heading>
     </VStack>
   </FullScreenSection>
 );

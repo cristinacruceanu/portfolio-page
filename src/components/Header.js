@@ -33,9 +33,11 @@ const socials = [
 ];
 
 const Header = () => {
-  const handleClick = (anchor) => () => {
+  const handleClick = (anchor) => (event) => {
+    event.preventDefault();
     const id = `${anchor}-section`;
     const element = document.getElementById(id);
+
     if (element) {
       element.scrollIntoView({
         behavior: "smooth",
@@ -64,11 +66,19 @@ const Header = () => {
           alignItems="center"
         >
           <nav>
-            <HStack>
+            <HStack spacing={8}>
               {socials.map((social) => {
+                /* another solution:
+                  target={social.url.startsWith("https") ? "_blank" : "_self"}
+                      rel={social.url.startsWith("https") ? "noopener noreferrer" : ""} */
                 if (social.url.includes("https")) {
                   return (
-                    <a href={social.url}>
+                    <a
+                      href={social.url}
+                      key={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <FontAwesomeIcon
                         icon={social.icon}
                         size="2x"
@@ -76,15 +86,16 @@ const Header = () => {
                     </a>
                   );
                 }
+                return null;
               })}
             </HStack>
           </nav>
           <nav>
             <HStack spacing={8}>
-              <a href="#contactme-section" onClick={handleClick}>
+              <a href="#contactme-section" onClick={handleClick("contactme")}>
                 Contact me
               </a>
-              <a href="#projects-section" onClick={handleClick}>
+              <a href="#projects-section" onClick={handleClick("projects")}>
                 Projects
               </a>
             </HStack>
