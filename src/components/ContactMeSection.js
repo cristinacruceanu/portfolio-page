@@ -28,28 +28,6 @@ const LandingSection = () => {
       type: "",
       comment: "",
     },
-    onSubmit: async (values, { setSubmitting }) => {
-      try {
-        await submit({
-          firstName: values.firstName,
-          email: values.email,
-          type: values.type,
-          comment: values.comment,
-        });
-
-        onOpen({
-          title: "Submission Successful",
-          description: "Your form has been submitted successfully!",
-        });
-      } catch (error) {
-        onOpen({
-          title: "Submission Error",
-          description: "There was an error submitting the form.",
-        });
-      } finally {
-        setSubmitting(false);
-      }
-    },
 
     validationSchema: Yup.object({
       firstName: Yup.string().required("Required"),
@@ -57,7 +35,34 @@ const LandingSection = () => {
       type: Yup.string().required("Required"),
       comment: Yup.string().required("Required"),
     }),
+
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        await submit(values);
+      } catch (error) {
+        console.log("Submission error:", error);
+      }
+    },
   });
+
+  useEffect(() => {
+    if (response) {
+      if (response.type === "success") {
+        onOpen({
+          title: "All good!",
+          message: `Thank you for your submission ${formik.values.firstName}, we will get back to you shortly!`,
+          type: "success",
+        });
+        formik.resetForm();
+      } else if (response.type === "error") {
+        onOpen({
+          title: "Oops!",
+          message: ` ${response.message}. Something went wrong, please try again later!`,
+          type: "error",
+        });
+      }
+    }
+  }, [response]); //need to fix this//
 
   return (
     <FullScreenSection
@@ -73,7 +78,9 @@ const LandingSection = () => {
         <Box p={6} rounded="md" w="100%">
           <form onSubmit={formik.handleSubmit}>
             <VStack spacing={4}>
-              <FormControl isInvalid={false}>
+              <FormControl
+                isInvalid={formik.touched.firstName && formik.errors.firstName}
+              >
                 <FormLabel htmlFor="firstName">Name</FormLabel>
                 <Input
                   id="firstName"
@@ -84,7 +91,9 @@ const LandingSection = () => {
                   <FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
                 ) : null}
               </FormControl>
-              <FormControl isInvalid={false}>
+              <FormControl
+                isInvalid={formik.touched.email && formik.errors.email}
+              >
                 <FormLabel htmlFor="email">Email Address</FormLabel>
                 <Input
                   id="email"
@@ -96,7 +105,9 @@ const LandingSection = () => {
                   <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
                 ) : null}
               </FormControl>
-              <FormControl>
+              <FormControl
+                isInvalid={formik.touched.type && formik.errors.type}
+              >
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
                 <Select id="type" name="type" {...formik.getFieldProps("type")}>
                   <option value="hireMe">Freelance project proposal</option>
@@ -105,8 +116,13 @@ const LandingSection = () => {
                   </option>
                   <option value="other">Other</option>
                 </Select>
+                {formik.touched.type && formik.errors.type ? (
+                  <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
+                ) : null}
               </FormControl>
-              <FormControl isInvalid={false}>
+              <FormControl
+                isInvalid={formik.touched.comment && formik.errors.comment}
+              >
                 <FormLabel htmlFor="comment">Your message</FormLabel>
                 <Textarea
                   id="comment"
@@ -118,7 +134,12 @@ const LandingSection = () => {
                   <FormErrorMessage>{formik.errors.comment}</FormErrorMessage>
                 ) : null}
               </FormControl>
-              <Button type="submit" colorScheme="purple" width="full">
+              <Button
+                type="submit"
+                colorScheme="purple"
+                width="full"
+                isLoading={isLoading}
+              >
                 Submit
               </Button>
             </VStack>
