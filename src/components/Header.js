@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -44,7 +44,41 @@ const Header = () => {
         block: "start",
       });
     }
-  };
+
+    /* const headerAnimation = () => {
+       const [scrollDirection, setScrollDirection] = useState("up");
+       const lastScrollY = useRef(0);
+       const headerRef = useRef(null);
+
+       const handleScroll = () => {
+         const currentScrollY = window.scrollY;
+         if (currentScrollY > lastScrollY.current) {
+           setScrollDirection("down");
+         } else {
+           setScrollDirection("up");
+         }
+         lastScrollY.current = currentScrollY;
+       };
+       useEffect(() => {
+         window.removeEventListener("scroll", handleScroll);
+         return () => {
+           window.removeEventListener("scroll", handleScroll);
+         };
+       }, []);
+       useEffect(() => {
+         if (headerRef.current) {
+           if (scrollDirection === "down") {
+             headerRef.current.style.transform = "translateY(-200px)";
+           } else {
+             headerRef.current.style.transform = "translateY(0)";
+           }
+         }
+       }, [scrollDirection]);
+     };
+
+*/
+
+    };
 
   return (
     <Box
@@ -57,6 +91,7 @@ const Header = () => {
       transitionDuration=".3s"
       transitionTimingFunction="ease-in-out"
       backgroundColor="#18181b"
+      zIndex={1000}
     >
       <Box color="white" maxWidth="1280px" margin="0 auto">
         <HStack

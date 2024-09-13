@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useFormik } from "formik";
 import {
   Box,
@@ -36,33 +36,20 @@ const LandingSection = () => {
       comment: Yup.string().required("Required"),
     }),
 
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        await submit(values);
-      } catch (error) {
-        console.log("Submission error:", error);
+    onSubmit: (values) => {
+      submit(values);
+
+      if (!isLoading && response) {
+        onOpen({
+          isOpen: true,
+          type: response.type,
+          message: response.message,
+        });
+
+        formik.resetForm();
       }
     },
   });
-
-  useEffect(() => {
-    if (response) {
-      if (response.type === "success") {
-        onOpen({
-          title: "All good!",
-          message: `Thank you for your submission ${formik.values.firstName}, we will get back to you shortly!`,
-          type: "success",
-        });
-        formik.resetForm();
-      } else if (response.type === "error") {
-        onOpen({
-          title: "Oops!",
-          message: ` ${response.message}. Something went wrong, please try again later!`,
-          type: "error",
-        });
-      }
-    }
-  }, [response]); //need to fix this//
 
   return (
     <FullScreenSection
@@ -109,12 +96,25 @@ const LandingSection = () => {
                 isInvalid={formik.touched.type && formik.errors.type}
               >
                 <FormLabel htmlFor="type">Type of enquiry</FormLabel>
-                <Select id="type" name="type" {...formik.getFieldProps("type")}>
-                  <option value="hireMe">Freelance project proposal</option>
-                  <option value="openSource">
+                <Select
+                  id="type"
+                  name="type"
+                  placeholder="Select an option"
+                  {...formik.getFieldProps("type")}
+                  bg="#351b6e"
+                >
+                  <option value="hireMe" style={{ backgroundColor: "#351b6e" }}>
+                    Freelance project proposal
+                  </option>
+                  <option
+                    value="openSource"
+                    style={{ backgroundColor: "#351b6e" }}
+                  >
                     Open source consultancy session
                   </option>
-                  <option value="other">Other</option>
+                  <option value="other" style={{ backgroundColor: "#351b6e" }}>
+                    Other
+                  </option>
                 </Select>
                 {formik.touched.type && formik.errors.type ? (
                   <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
