@@ -32,6 +32,7 @@ const useSubmit = () => {
     } finally {
       setLoading(false);
       return response;
+      /* Solution: The above return response should be deleted */
     }
   };
 
