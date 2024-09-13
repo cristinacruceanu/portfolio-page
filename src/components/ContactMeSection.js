@@ -34,6 +34,7 @@ const LandingSection = () => {
       email: Yup.string().required("Required"),
       type: Yup.string().required("Required"),
       comment: Yup.string().required("Required"),
+      // Yup.string().email("Invalid email address").required("Required")//
     }),
 
     onSubmit: (values) => {
