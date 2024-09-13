@@ -101,7 +101,6 @@ const LandingSection = () => {
                   name="type"
                   placeholder="Select an option"
                   {...formik.getFieldProps("type")}
-                  bg="#351b6e"
                 >
                   <option value="hireMe" style={{ backgroundColor: "#351b6e" }}>
                     Freelance project proposal

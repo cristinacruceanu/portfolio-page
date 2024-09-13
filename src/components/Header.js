@@ -33,6 +33,35 @@ const socials = [
 ];
 
 const Header = () => {
+  const [scrollDirection, setScrollDirection] = useState("up");
+  const lastScrollY = useRef(0);
+  const headerRef = useRef(null);
+
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > lastScrollY.current) {
+      setScrollDirection("down");
+    } else {
+      setScrollDirection("up");
+    }
+    lastScrollY.current = currentScrollY;
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+  useEffect(() => {
+    if (headerRef.current) {
+      if (scrollDirection === "down") {
+        headerRef.current.style.transform = "translateY(-200px)";
+      } else {
+        headerRef.current.style.transform = "translateY(0)";
+      }
+    }
+  }, [scrollDirection]);
+
   const handleClick = (anchor) => (event) => {
     event.preventDefault();
     const id = `${anchor}-section`;
@@ -44,41 +73,7 @@ const Header = () => {
         block: "start",
       });
     }
-
-    /* const headerAnimation = () => {
-       const [scrollDirection, setScrollDirection] = useState("up");
-       const lastScrollY = useRef(0);
-       const headerRef = useRef(null);
-
-       const handleScroll = () => {
-         const currentScrollY = window.scrollY;
-         if (currentScrollY > lastScrollY.current) {
-           setScrollDirection("down");
-         } else {
-           setScrollDirection("up");
-         }
-         lastScrollY.current = currentScrollY;
-       };
-       useEffect(() => {
-         window.removeEventListener("scroll", handleScroll);
-         return () => {
-           window.removeEventListener("scroll", handleScroll);
-         };
-       }, []);
-       useEffect(() => {
-         if (headerRef.current) {
-           if (scrollDirection === "down") {
-             headerRef.current.style.transform = "translateY(-200px)";
-           } else {
-             headerRef.current.style.transform = "translateY(0)";
-           }
-         }
-       }, [scrollDirection]);
-     };
-
-*/
-
-    };
+  };
 
   return (
     <Box
@@ -92,6 +87,7 @@ const Header = () => {
       transitionTimingFunction="ease-in-out"
       backgroundColor="#18181b"
       zIndex={1000}
+      ref={headerRef}
     >
       <Box color="white" maxWidth="1280px" margin="0 auto">
         <HStack
